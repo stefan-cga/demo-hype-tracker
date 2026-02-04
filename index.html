@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upcoming Steam Games - Demo Hype Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0f;
+            color: #e4e4e7;
+            min-height: 100vh;
+            background-image:
+                radial-gradient(ellipse at top, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom right, rgba(236, 72, 153, 0.05) 0%, transparent 50%);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e4e4e7 0%, #a1a1aa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #71717a;
+            font-size: 1.1rem;
+            margin-top: 8px;
+            font-weight: 400;
+        }
+
+        .updated {
+            color: #52525b;
+            font-size: 0.85rem;
+            margin-top: 12px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #71717a;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table-wrapper {
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            padding: 16px 20px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #71717a;
+            background: rgba(0,0,0,0.3);
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.2s;
+            white-space: nowrap;
+        }
+
+        th:hover {
+            color: #a1a1aa;
+        }
+
+        th.sorted-asc::after {
+            content: ' ↑';
+            color: #6366f1;
+        }
+
+        th.sorted-desc::after {
+            content: ' ↓';
+            color: #6366f1;
+        }
+
+        td {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        tr {
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .rank {
+            font-weight: 700;
+            color: #52525b;
+            width: 50px;
+        }
+
+        .rank-1 { color: #fbbf24; }
+        .rank-2 { color: #9ca3af; }
+        .rank-3 { color: #cd7f32; }
+
+        .game-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .game-name {
+            font-weight: 600;
+            color: #e4e4e7;
+        }
+
+        .game-name a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .game-name a:hover {
+            color: #818cf8;
+        }
+
+        .release-tag {
+            font-size: 0.75rem;
+            color: #52525b;
+        }
+
+        .number {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+            font-weight: 500;
+        }
+
+        .players-cell {
+            color: #22c55e;
+        }
+
+        .peak-cell {
+            color: #71717a;
+        }
+
+        .followers-cell {
+            color: #8b5cf6;
+        }
+
+        .gain-positive {
+            color: #22c55e;
+        }
+
+        .gain-negative {
+            color: #ef4444;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 80px 20px;
+            color: #71717a;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(99, 102, 241, 0.2);
+            border-top-color: #6366f1;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error {
+            text-align: center;
+            padding: 80px 20px;
+            color: #ef4444;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #71717a;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                padding: 20px 16px;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .stat-card {
+                padding: 16px;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+
+            th, td {
+                padding: 12px 14px;
+                font-size: 0.85rem;
+            }
+
+            .hide-mobile {
+                display: none;
+            }
+
+            .game-name {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">🔥</div>
+                <h1>Demo Hype Tracker</h1>
+            </div>
+            <p class="subtitle">Upcoming Steam games ranked by demo activity & wishlists</p>
+            <p class="updated" id="updated"></p>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="total-games">—</div>
+                <div class="stat-label">Games Tracked</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="total-players">—</div>
+                <div class="stat-label">Playing Demos Now</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="total-followers">—</div>
+                <div class="stat-label">Combined Wishlists</div>
+            </div>
+        </div>
+
+        <div id="table-container">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <p>Loading latest data...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let gamesData = [];
+        let currentSort = { column: 'current_players', direction: 'desc' };
+
+        async function loadData() {
+            try {
+                const response = await fetch('data/combined.json');
+                if (!response.ok) throw new Error('Failed to load data');
+                const data = await response.json();
+
+                gamesData = data.games;
+
+                if (gamesData.length === 0) {
+                    document.getElementById('table-container').innerHTML =
+                        '<div class="empty-state"><p>No games with demos currently tracked.</p></div>';
+                    return;
+                }
+
+                // Update header stats
+                const updated = new Date(data.updated);
+                document.getElementById('updated').textContent =
+                    `Updated ${updated.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}`;
+                document.getElementById('total-games').textContent =
+                    data.count.toLocaleString();
+                document.getElementById('total-players').textContent =
+                    formatCompact(gamesData.reduce((sum, g) => sum + (g.current_players || 0), 0));
+                document.getElementById('total-followers').textContent =
+                    formatCompact(gamesData.reduce((sum, g) => sum + (g.followers || 0), 0));
+
+                renderTable();
+            } catch (error) {
+                document.getElementById('table-container').innerHTML =
+                    `<div class="error"><p>Unable to load data. Please try again later.</p></div>`;
+                console.error(error);
+            }
+        }
+
+        function formatNumber(num) {
+            if (num === null || num === undefined) return '—';
+            return num.toLocaleString();
+        }
+
+        function formatCompact(num) {
+            if (num === null || num === undefined) return '—';
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toLocaleString();
+        }
+
+        function renderTable() {
+            const sorted = [...gamesData].sort((a, b) => {
+                let aVal = a[currentSort.column];
+                let bVal = b[currentSort.column];
+
+                // Handle nulls
+                if (aVal === null || aVal === undefined) aVal = currentSort.direction === 'desc' ? -Infinity : Infinity;
+                if (bVal === null || bVal === undefined) bVal = currentSort.direction === 'desc' ? -Infinity : Infinity;
+
+                if (typeof aVal === 'string') {
+                    aVal = aVal.toLowerCase();
+                    bVal = (bVal || '').toLowerCase();
+                }
+
+                if (currentSort.direction === 'asc') {
+                    return aVal > bVal ? 1 : aVal < bVal ? -1 : 0;
+                } else {
+                    return aVal < bVal ? 1 : aVal > bVal ? -1 : 0;
+                }
+            });
+
+            const html = `
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="rank">#</th>
+                                <th data-sort="name">Game</th>
+                                <th data-sort="current_players" class="number">Demo Players</th>
+                                <th data-sort="peak_24h" class="number hide-mobile">24h Peak</th>
+                                <th data-sort="followers" class="number">Wishlists</th>
+                                <th data-sort="follower_gain_7d" class="number hide-mobile">7d Change</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${sorted.map((game, i) => `
+                                <tr>
+                                    <td class="rank ${i < 3 ? 'rank-' + (i + 1) : ''}">${i + 1}</td>
+                                    <td>
+                                        <div class="game-cell">
+                                            <span class="game-name">
+                                                <a href="https://store.steampowered.com/app/${game.appid}" target="_blank" rel="noopener">
+                                                    ${escapeHtml(game.name)}
+                                                </a>
+                                            </span>
+                                            <span class="release-tag">${escapeHtml(game.release_date || 'TBA')}</span>
+                                        </div>
+                                    </td>
+                                    <td class="number players-cell">${formatNumber(game.current_players)}</td>
+                                    <td class="number peak-cell hide-mobile">${formatNumber(game.peak_24h)}</td>
+                                    <td class="number followers-cell">${formatNumber(game.followers)}</td>
+                                    <td class="number hide-mobile ${getGainClass(game.follower_gain_7d)}">
+                                        ${formatGain(game.follower_gain_7d)}
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            document.getElementById('table-container').innerHTML = html;
+
+            // Add sort listeners and indicators
+            document.querySelectorAll('th[data-sort]').forEach(th => {
+                const column = th.dataset.sort;
+                if (column === currentSort.column) {
+                    th.classList.add(`sorted-${currentSort.direction}`);
+                }
+                th.addEventListener('click', () => sortBy(column));
+            });
+        }
+
+        function getGainClass(gain) {
+            if (gain === null || gain === undefined) return '';
+            return gain >= 0 ? 'gain-positive' : 'gain-negative';
+        }
+
+        function formatGain(gain) {
+            if (gain === null || gain === undefined) return '—';
+            const prefix = gain >= 0 ? '+' : '';
+            return prefix + formatNumber(gain);
+        }
+
+        function sortBy(column) {
+            if (currentSort.column === column) {
+                currentSort.direction = currentSort.direction === 'desc' ? 'asc' : 'desc';
+            } else {
+                currentSort.column = column;
+                currentSort.direction = 'desc';
+            }
+            renderTable();
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        loadData();
+    </script>
+</body>
+</html>

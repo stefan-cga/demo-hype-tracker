@@ -1,0 +1,78 @@
+{
+  "updated": "2026-02-04T14:57:47.712579Z",
+  "count": 4,
+  "games": [
+    {
+      "appid": 3681010,
+      "name": "Nioh 3",
+      "demo_appid": 4198760,
+      "release_date": "5 Feb, 2026",
+      "first_seen": "2026-02-04 14:32:43",
+      "current_players": 20426,
+      "peak_24h": 22028,
+      "peak_all_time": 39227,
+      "player_trend_7d": [
+        20426
+      ],
+      "followers": 40558,
+      "follower_gain_7d": 6734,
+      "follower_trend_7d": [
+        40558
+      ]
+    },
+    {
+      "appid": 3105440,
+      "name": "Heroes of Might and Magic: Olden Era",
+      "demo_appid": 3241970,
+      "release_date": "2026",
+      "first_seen": "2026-02-04 14:32:43",
+      "current_players": 1224,
+      "peak_24h": 1281,
+      "peak_all_time": 24157,
+      "player_trend_7d": [
+        1224
+      ],
+      "followers": 129447,
+      "follower_gain_7d": 739,
+      "follower_trend_7d": [
+        129447
+      ]
+    },
+    {
+      "appid": 3357650,
+      "name": "PRAGMATA",
+      "demo_appid": 4003800,
+      "release_date": "23 Apr, 2026",
+      "first_seen": "2026-02-04 14:43:01",
+      "current_players": 59,
+      "peak_24h": 79,
+      "peak_all_time": 7932,
+      "player_trend_7d": [
+        59
+      ],
+      "followers": 49036,
+      "follower_gain_7d": 567,
+      "follower_trend_7d": [
+        49036
+      ]
+    },
+    {
+      "appid": 1297900,
+      "name": "Gothic 1 Remake",
+      "demo_appid": 3448280,
+      "release_date": "Q1 2026",
+      "first_seen": "2026-02-04 14:32:43",
+      "current_players": 11,
+      "peak_24h": 27,
+      "peak_all_time": 10222,
+      "player_trend_7d": [
+        11
+      ],
+      "followers": 90338,
+      "follower_gain_7d": 524,
+      "follower_trend_7d": [
+        90338
+      ]
+    }
+  ]
+}
