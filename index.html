@@ -216,15 +216,23 @@
         }
 
         .peak-cell {
-            color: #71717a;
+            color: #22c55e;
         }
 
         .followers-cell {
             color: #8b5cf6;
         }
 
+        .header-green {
+            color: #22c55e !important;
+        }
+
+        .header-purple {
+            color: #8b5cf6 !important;
+        }
+
         .gain-positive {
-            color: #22c55e;
+            color: #a78bfa;
         }
 
         .gain-negative {
@@ -306,21 +314,6 @@
             <p class="updated" id="updated"></p>
         </header>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-value" id="total-games">—</div>
-                <div class="stat-label">Games Tracked</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="total-players">—</div>
-                <div class="stat-label">Playing Demos Now</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="total-followers">—</div>
-                <div class="stat-label">Combined Wishlists</div>
-            </div>
-        </div>
-
         <div id="table-container">
             <div class="loading">
                 <div class="loading-spinner"></div>
@@ -347,16 +340,10 @@
                     return;
                 }
 
-                // Update header stats
+                // Update header
                 const updated = new Date(data.updated);
                 document.getElementById('updated').textContent =
                     `Updated ${updated.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}`;
-                document.getElementById('total-games').textContent =
-                    data.count.toLocaleString();
-                document.getElementById('total-players').textContent =
-                    formatCompact(gamesData.reduce((sum, g) => sum + (g.current_players || 0), 0));
-                document.getElementById('total-followers').textContent =
-                    formatCompact(gamesData.reduce((sum, g) => sum + (g.followers || 0), 0));
 
                 renderTable();
             } catch (error) {
@@ -406,10 +393,10 @@
                             <tr>
                                 <th class="rank">#</th>
                                 <th data-sort="name">Game</th>
-                                <th data-sort="current_players" class="number">Demo Players</th>
-                                <th data-sort="peak_24h" class="number hide-mobile">24h Peak</th>
-                                <th data-sort="followers" class="number">Wishlists</th>
-                                <th data-sort="follower_gain_7d" class="number hide-mobile">7d Change</th>
+                                <th data-sort="current_players" class="number header-green">Current Players</th>
+                                <th data-sort="peak_24h" class="number hide-mobile header-green">24h Peak</th>
+                                <th data-sort="followers" class="number header-purple">Followers</th>
+                                <th data-sort="follower_gain_7d" class="number hide-mobile header-purple">7d Change</th>
                             </tr>
                         </thead>
                         <tbody>
