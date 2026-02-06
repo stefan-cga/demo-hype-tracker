@@ -196,6 +196,11 @@
             color: #52525b;
         }
 
+        .demo-release {
+            color: #71717a;
+            font-size: 0.9rem;
+        }
+
         .number {
             text-align: right;
             font-variant-numeric: tabular-nums;
@@ -383,6 +388,7 @@
                             <tr>
                                 <th class="rank">#</th>
                                 <th data-sort="name">Game</th>
+                                <th data-sort="demo_release_date" class="hide-mobile">Demo Release</th>
                                 <th data-sort="current_players" class="number header-green">Current Players</th>
                                 <th data-sort="peak_24h" class="number hide-mobile header-green">24h Peak</th>
                                 <th data-sort="followers" class="number header-purple">Followers</th>
@@ -403,6 +409,7 @@
                                             <span class="release-tag">${escapeHtml(game.release_date || 'TBA')}</span>
                                         </div>
                                     </td>
+                                    <td class="demo-release hide-mobile">${escapeHtml(game.demo_release_date || '—')}</td>
                                     <td class="number players-cell">${formatNumber(game.current_players)}</td>
                                     <td class="number peak-cell hide-mobile">${formatNumber(game.peak_24h)}</td>
                                     <td class="number followers-cell">${formatNumber(game.followers)}</td>
